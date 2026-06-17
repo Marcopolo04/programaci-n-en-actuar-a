@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actuaría UAEMex - Tutor de Programación</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/r.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        uaemex: {
+                            blue: '#003366',
+                            gold: '#C9A227',
+                            light: '#F0F4F8',
+                            accent: '#2563EB',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --primary: #003366;
+            --secondary: #C9A227;
+            --accent: #2563EB;
+            --success: #059669;
+            --warning: #D97706;
+            --danger: #DC2626;
+        }
+
+        * { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .phase-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .phase-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .phase-card.active {
+            border-color: var(--secondary);
+            box-shadow: 0 0 30px rgba(201, 162, 39, 0.15);
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.6s ease;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .code-header {
+            background: #2d2d2d;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .code-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .exercise-card {
+            transition: all 0.3s ease;
+        }
+        .exercise-card:hover {
+            border-color: var(--accent);
+        }
+
+        .quiz-option {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .quiz-option:hover {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--accent);
+        }
+        .quiz-option.selected {
+            background: rgba(37, 99, 235, 0.2);
+            border-color: var(--accent);
+        }
+        .quiz-option.correct {
+            background: rgba(5, 150, 105, 0.2);
+            border-color: var(--success);
+        }
+        .quiz-option.incorrect {
+            background: rgba(220, 38, 38, 0.2);
+            border-color: var(--danger);
+        }
+
+        .typing-effect::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .heatmap-cell {
+            transition: all 0.2s ease;
+        }
+        .heatmap-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .sidebar-item {
+            transition: all 0.2s ease;
+        }
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(37, 99, 235, 0.1);
+            border-left: 3px solid var(--accent);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .skill-bar {
+            transition: width 1s ease;
+        }
+
+        .mascot-bubble {
+            position: relative;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+        }
+        .mascot-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 24px;
+            width: 16px;
+            height: 16px;
+            background: rgba(30, 41, 59, 0.9);
+            border-right: 1px solid rgba(201, 162, 39, 0.3);
+            border-bottom: 1px solid rgba(201, 162, 39, 0.3);
+            transform: rotate(45deg);
+        }
+
+        .period-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 4px;
+        }
+        @media (max-width: 768px) {
+            .period-grid { grid-template-columns: repeat(5, 1fr); }
+        }
+
+        .topic-tag {
+            transition: all 0.2s ease;
+        }
+        .topic-tag:hover {
+            transform: scale(1.05);
+        }
+
+        .streak-flame {
+            animation: flicker 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            z-index: 100;
+            transition: width 0.1s ease;
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="min-h-screen">
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-uaemex-blue to-uaemex-gold flex items-center justify-center text-white font-bold text-lg">A</div>
+                    <div>
+                        <h1 class="font-bold text-lg text-white">Actuaría <span class="text-uaemex-gold">UAEMex</span></h1>
+                        <p class="text-xs text-slate-400">Tutor de Programación</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center gap-6">
+                    <div class="flex items-center gap-2 bg-slate-800/50 rounded-full px-4 py-1.5">
+                        <span class="text-uaemex-gold text-lg">🔥</span>
+                        <span class="text-sm font-medium" id="streakCount">Racha: 3 días</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">T</div>
+                        <span class="text-sm text-slate-300">Tutor IA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-12 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-uaemex-blue/20"></div>
+        <div class="absolute top-20 right-10 w-72 h-72 bg-uaemex-gold/10 rounded-full blur-3xl float-animation"></div>
+        <div class="absolute bottom-10 left-10 w-96 h-96 bg-uaemex-blue/10 rounded-full blur-3xl float-animation" style="animation-delay: 2s;"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="inline-flex items-center gap-2 bg-uaemex-gold/10 border border-uaemex-gold/20 rounded-full px-4 py-1.5">
+                        <span class="w-2 h-2 rounded-full bg-uaemex-gold animate-pulse"></span>
+                        <span class="text-uaemex-gold text-sm font-medium">Programa Integral UAEMex</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-bold leading-tight">
+                        Domina <span class="text-transparent bg-clip-text bg-gradient-to-r from-uaemex-gold to-yellow-400">Python y R</span><br>
+                        para Actuaría
+                    </h1>
+                    <p class="text-lg text-slate-400 max-w-xl">
+                        Plan de estudios progresivo alineado al mapa curricular de la UAEMex. 
+                        De fundamentos de programación hasta Machine Learning aplicado a riesgos.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="scrollToSection('phases')" class="px-8 py-3 bg-gradient-to-r from-uaemex-blue to-blue-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all transform hover:scale-105">
+                            Comenzar Aprendizaje
+                        </button>
+                        <button onclick="scrollToSection('uaemex-map')" class="px-8 py-3 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-800 transition-all">
+                            Ver Mapa Curricular
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-6 pt-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-white">5</div>
+                            <div class="text-xs text-slate-400">Fases</div>
+                        </div>
+                        <div class="w-px h-8 bg-slate-700"></div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-white">10</div>
+                            <div class="text-xs text-slate-400">Periodos UAEMex</div>
+                        </div>
+                        <div class="w-px h-8 bg-slate-700"></div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-white">50+</div>
+                            <div class="text-xs text-slate-400">Ejercicios</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="glass-panel rounded-2xl p-6 space-y-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm font-medium text-slate-400">Progreso General</span>
+                            <span class="text-sm font-bold text-uaemex-gold" id="overallProgress">15%</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2.5">
+                            <div class="bg-gradient-to-r from-uaemex-gold to-yellow-400 h-2.5 rounded-full skill-bar" style="width: 15%" id="progressBar"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 mt-4">
+                            <div class="bg-slate-800/50 rounded-xl p-4 text-center">
+                                <div class="text-2xl font-bold text-blue-400">Python</div>
+                                <div class="text-xs text-slate-400 mt-1">Nivel: Principiante</div>
+                            </div>
+                            <div class="bg-slate-800/50 rounded-xl p-4 text-center">
+                                <div class="text-2xl font-bold text-green-400">R</div>
+                                <div class="text-xs text-slate-400 mt-1">Nivel: Principiante</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-4 bg-uaemex-gold/5 border border-uaemex-gold/20 rounded-xl">
+                            <div class="flex items-start gap-3">
+                                <span class="text-2xl">🤖</span>
+                                <div>
+                                    <p class="text-sm font-medium text-uaemex-gold">Tutor Activo</p>
+                                    <p class="text-xs text-slate-400 mt-1 typing-effect" id="tutorMessage">Hola! Soy tu tutor personal. Estoy aquí para guiarte...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mapa Curricular UAEMex -->
+    <section id="uaemex-map" class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-3">Mapa Curricular <span class="text-uaemex-gold">UAEMex</span></h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">Visualización interactiva de los 10 periodos de la Licenciatura en Actuaría. Cada celda representa una materia y su relación con la programación.</p>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-6 overflow-x-auto">
+                <div class="min-w-[1000px]">
+                    <div class="grid grid-cols-11 gap-2 mb-4">
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">Materia</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P1</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P2</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P3</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P4</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P5</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P6</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P7</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P8</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P9</div>
+                        <div class="text-xs text-slate-500 font-medium text-center py-2">P10</div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="grid grid-cols-11 gap-2 items-center">
+                            <div class="text-xs text-slate-300 truncate">Cálculo</div>
+                            <div class="heatmap-cell h-8 rounded bg-blue-500/40 border border-blue-500/30 cursor-pointer" title="Cálculo Diferencial" onclick="showSubjectInfo('Cálculo Diferencial', 'Fundamentos matemáticos para modelos actuariales')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-blue-500/40 border border-blue-500/30 cursor-pointer" title="Cálculo Integral" onclick="showSubjectInfo('Cálculo Integral', 'Integración para distribuciones de probabilidad')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-blue-500/40 border border-blue-500/30 cursor-pointer" title="Cálculo Multivariable" onclick="showSubjectInfo('Cálculo Multivariable', 'Optimización de portfolios')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-blue-500/40 border border-blue-500/30 cursor-pointer" title="Cálculo Integral Multivariable" onclick="showSubjectInfo('Cálculo Integral Multivariable', 'Probabilidad conjunta')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-blue-500/40 border border-blue-500/30 cursor-pointer" title="Análisis Matemático" onclick="showSubjectInfo('Análisis Matemático', 'Teoría de la medida')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-blue-500/40 border border-blue-500/30 cursor-pointer" title="Análisis Numérico" onclick="showSubjectInfo('Análisis Numérico', 'Métodos numéricos en Python/R')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Análisis de Regresión" onclick="showSubjectInfo('Análisis de Regresión', 'Modelos lineales en R')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Series de Tiempo" onclick="showSubjectInfo('Series de Tiempo', 'ARIMA, GARCH en Python/R')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-green-500/40 border border-green-500/30 cursor-pointer" title="Modelos y Simulación" onclick="showSubjectInfo('Modelos y Simulación', 'Monte Carlo en Python')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                        </div>
+
+                        <div class="grid grid-cols-11 gap-2 items-center">
+                            <div class="text-xs text-slate-300 truncate">Álgebra</div>
+                            <div class="heatmap-cell h-8 rounded bg-blue-500/40 border border-blue-500/30 cursor-pointer" title="Álgebra Superior" onclick="showSubjectInfo('Álgebra Superior', 'Estructuras algebraicas')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-blue-500/40 border border-blue-500/30 cursor-pointer" title="Álgebra Lineal" onclick="showSubjectInfo('Álgebra Lineal', 'Vectores, matrices - NumPy')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                        </div>
+
+                        <div class="grid grid-cols-11 gap-2 items-center">
+                            <div class="text-xs text-slate-300 truncate">Programación</div>
+                            <div class="heatmap-cell h-8 rounded bg-green-500/60 border border-green-500/50 cursor-pointer" title="Programación" onclick="showSubjectInfo('Programación', 'Python/R básico - FASE 1')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-green-500/60 border border-green-500/50 cursor-pointer" title="Bases de Datos" onclick="showSubjectInfo('Bases de Datos', 'SQL, Pandas - FASE 2')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-green-500/40 border border-green-500/30 cursor-pointer" title="Cálculo Actuarial I" onclick="showSubjectInfo('Cálculo Actuarial I', 'Vida con Python/R - FASE 4')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-green-500/40 border border-green-500/30 cursor-pointer" title="Cálculo Actuarial II" onclick="showSubjectInfo('Cálculo Actuarial II', 'Seguros - FASE 4')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-green-500/40 border border-green-500/30 cursor-pointer" title="Cálculo Actuarial III" onclick="showSubjectInfo('Cálculo Actuarial III', 'Reservas - FASE 4')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-green-500/40 border border-green-500/30 cursor-pointer" title="Cálculo Actuarial Daños" onclick="showSubjectInfo('Cálculo Actuarial Daños', 'No vida - FASE 4')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Análisis Multivariado" onclick="showSubjectInfo('Análisis Multivariado', 'PCA, Clustering - FASE 5')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Investigación Actuarial" onclick="showSubjectInfo('Investigación Actuarial', 'Proyecto final - FASE 5')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                        </div>
+
+                        <div class="grid grid-cols-11 gap-2 items-center">
+                            <div class="text-xs text-slate-300 truncate">Estadística</div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Teoría de la Probabilidad" onclick="showSubjectInfo('Teoría de la Probabilidad', 'Distribuciones - FASE 3')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Probabilidad Avanzada" onclick="showSubjectInfo('Probabilidad Avanzada', 'Procesos estocásticos - FASE 3')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Inferencia Estadística" onclick="showSubjectInfo('Inferencia Estadística', 'Estimación, pruebas - FASE 3')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Estadística Matemática" onclick="showSubjectInfo('Estadística Matemática', 'Teoría asintótica - FASE 3')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Teoría del Riesgo" onclick="showSubjectInfo('Teoría del Riesgo', 'Ruina, colectivos - FASE 4')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Estadística Bayesiana" onclick="showSubjectInfo('Estadística Bayesiana', 'Inferencia bayesiana - FASE 5')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-purple-500/40 border border-purple-500/30 cursor-pointer" title="Modelos Actuariales" onclick="showSubjectInfo('Modelos Actuariales', 'GLM, Machine Learning - FASE 5')"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                        </div>
+
+                        <div class="grid grid-cols-11 gap-2 items-center">
+                            <div class="text-xs text-slate-300 truncate">Finanzas</div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <div class="heatmap-cell h-8 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-6 mt-6 text-xs">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-green-500/60 border border-green-500/50"></div>
+                            <span class="text-slate-400">Alta programación</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-purple-500/40 border border-purple-500/30"></div>
+                            <span class="text-slate-400">Media programación</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-blue-500/40 border border-blue-500/30"></div>
+                            <span class="text-slate-400">Baja programación</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded bg-slate-700/30 border border-slate-600/30"></div>
+                            <span class="text-slate-400">Sin programación directa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="subjectInfo" class="mt-4 glass-panel rounded-xl p-4 hidden">
+                <h3 class="font-bold text-uaemex-gold mb-1" id="subjectTitle"></h3>
+                <p class="text-sm text-slate-300" id="subjectDesc"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fases de Estudio -->
+    <section id="phases" class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-3">Plan de Estudios <span class="text-uaemex-gold">Progresivo</span></h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">5 fases estructuradas que se alinean con tu carrera en la UAEMex. Cada fase incluye teoría, ejercicios prácticos y evaluaciones.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="phasesGrid">
+                <div class="phase-card glass-panel rounded-2xl p-6 border border-slate-700" onclick="selectPhase(1)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-lg">1</div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-slate-400">Meses 1-2</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Fundamentos</h3>
+                    <p class="text-sm text-slate-400 mb-4">Variables, estructuras de control, bucles, funciones. Python por su legibilidad.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="topic-tag px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20">Python</span>
+                        <span class="topic-tag px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20">Variables</span>
+                        <span class="topic-tag px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20">If/Else</span>
+                        <span class="topic-tag px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20">Bucles</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-xs text-slate-500">12 ejercicios</span>
+                        </div>
+                        <div class="w-20 bg-slate-700 rounded-full h-1.5">
+                            <div class="bg-blue-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase-card glass-panel rounded-2xl p-6 border border-slate-700" onclick="selectPhase(2)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-bold text-lg">2</div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-slate-400">Meses 3-4</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Datos y Visualización</h3>
+                    <p class="text-sm text-slate-400 mb-4">Pandas, NumPy, Tidyverse. Limpieza de bases actuariales.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="topic-tag px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded-lg border border-green-500/20">Pandas</span>
+                        <span class="topic-tag px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded-lg border border-green-500/20">NumPy</span>
+                        <span class="topic-tag px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded-lg border border-green-500/20">Tidyverse</span>
+                        <span class="topic-tag px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded-lg border border-green-500/20">Bases de Datos</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-xs text-slate-500">15 ejercicios</span>
+                        </div>
+                        <div class="w-20 bg-slate-700 rounded-full h-1.5">
+                            <div class="bg-green-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase-card glass-panel rounded-2xl p-6 border border-slate-700" onclick="selectPhase(3)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">3</div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-slate-400">Meses 5-6</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Estadística Computacional</h3>
+                    <p class="text-sm text-slate-400 mb-4">Simulación de siniestralidad, distribuciones de probabilidad aplicadas a seguros.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="topic-tag px-2 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-lg border border-purple-500/20">Simulación</span>
+                        <span class="topic-tag px-2 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-lg border border-purple-500/20">Distribuciones</span>
+                        <span class="topic-tag px-2 py-1 bg-purple-500/10 text-purple-400 text-xs rounded-lg border border-purple-500/20">Monte Carlo</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-xs text-slate-500">10 ejercicios</span>
+                        </div>
+                        <div class="w-20 bg-slate-700 rounded-full h-1.5">
+                            <div class="bg-purple-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase-card glass-panel rounded-2xl p-6 border border-slate-700" onclick="selectPhase(4)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-white font-bold text-lg">4</div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-slate-400">Meses 7-8</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Aplicaciones Actuariales</h3>
+                    <p class="text-sm text-slate-400 mb-4">Vida (lifecontingencies), No Vida (ChainLadder), Pricing (GLM).</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="topic-tag px-2 py-1 bg-orange-500/10 text-orange-400 text-xs rounded-lg border border-orange-500/20">lifecontingencies</span>
+                        <span class="topic-tag px-2 py-1 bg-orange-500/10 text-orange-400 text-xs rounded-lg border border-orange-500/20">ChainLadder</span>
+                        <span class="topic-tag px-2 py-1 bg-orange-500/10 text-orange-400 text-xs rounded-lg border border-orange-500/20">GLM</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-xs text-slate-500">8 ejercicios</span>
+                        </div>
+                        <div class="w-20 bg-slate-700 rounded-full h-1.5">
+                            <div class="bg-orange-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase-card glass-panel rounded-2xl p-6 border border-slate-700 md:col-span-2 lg:col-span-1" onclick="selectPhase(5)">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center text-white font-bold text-lg">5</div>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-slate-400">Mes 9+</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Machine Learning</h3>
+                    <p class="text-sm text-slate-400 mb-4">Predicción de Churn, análisis de riesgos con modelos avanzados.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="topic-tag px-2 py-1 bg-red-500/10 text-red-400 text-xs rounded-lg border border-red-500/20">Churn</span>
+                        <span class="topic-tag px-2 py-1 bg-red-500/10 text-red-400 text-xs rounded-lg border border-red-500/20">Random Forest</span>
+                        <span class="topic-tag px-2 py-1 bg-red-500/10 text-red-400 text-xs rounded-lg border border-red-500/20">XGBoost</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span class="text-xs text-slate-500">5 ejercicios</span>
+                        </div>
+                        <div class="w-20 bg-slate-700 rounded-full h-1.5">
+                            <div class="bg-red-500 h-1.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido de Fase Seleccionada -->
+    <section id="phaseContent" class="py-16 px-4 hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="closePhase()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h2 class="text-2xl font-bold" id="phaseTitle">Fase 1: Fundamentos</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-4 gap-6">
+                <div class="lg:col-span-1 space-y-2" id="topicSidebar"></div>
+                <div class="lg:col-span-3 space-y-6">
+                    <div class="glass-panel rounded-2xl p-6 border border-uaemex-gold/20">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-uaemex-gold to-yellow-500 flex items-center justify-center text-2xl flex-shrink-0">🎓</div>
+                            <div class="flex-1">
+                                <div class="mascot-bubble mb-2">
+                                    <p class="text-sm text-slate-300" id="tutorPhaseMessage">¡Bienvenido a esta fase! Te guiaré paso a paso...</p>
+                                </div>
+                                <div class="flex items-center gap-2 text-xs text-slate-500">
+                                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    <span>Tutor Activo - Respondiendo en tiempo real</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl p-6" id="theoryContent"></div>
+
+                    <div class="glass-panel rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold">Ejercicios Prácticos</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-slate-400">Dificultad:</span>
+                                <div class="flex gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                                    <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="exercisesList" class="space-y-4"></div>
+                    </div>
+
+                    <div class="glass-panel rounded-2xl p-6">
+                        <h3 class="text-xl font-bold mb-4">Evaluación de Conocimientos</h3>
+                        <div id="quizContainer" class="space-y-6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recursos -->
+    <section id="resources" class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-3">Recursos y <span class="text-uaemex-gold">Cursos Gratuitos</span></h2>
+                <p class="text-slate-400">Material curado específicamente para estudiantes de Actuaría de la UAEMex.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass-panel rounded-2xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 text-xl">🐍</div>
+                        <h3 class="text-lg font-bold">Python</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <a href="https://www.kaggle.com/learn/intro-to-programming" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">1</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">Intro to Programming - Kaggle Learn</div>
+                                <div class="text-xs text-slate-500">Interactivo, gratuito</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        <a href="https://www.kaggle.com/learn/python" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">2</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">Python Intermedio - Kaggle</div>
+                                <div class="text-xs text-slate-500">Funciones, listas, strings</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        <a href="https://www.kaggle.com/learn/pandas" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">3</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">Pandas - Kaggle Learn</div>
+                                <div class="text-xs text-slate-500">Manipulación de datos</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        <a href="https://www.kaggle.com/learn/data-visualization" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">4</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">Data Visualization - Kaggle</div>
+                                <div class="text-xs text-slate-500">Seaborn, matplotlib</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        <a href="https://cs50.harvard.edu/python/2022/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center text-red-400 text-sm font-bold">★</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-red-400 transition-colors">Harvard CS50P - Python</div>
+                                <div class="text-xs text-slate-500">Curso universitario completo</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center text-green-400 text-xl">📊</div>
+                        <h3 class="text-lg font-bold">R y Estadística</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <a href="https://r4ds.had.co.nz/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 text-sm font-bold">1</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-green-400 transition-colors">R para Ciencia de Datos</div>
+                                <div class="text-xs text-slate-500">Libro oficial de Hadley Wickham</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        <a href="https://www.youtube.com/@statquest" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 text-sm font-bold">2</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-green-400 transition-colors">StatQuest con Josh Starmer</div>
+                                <div class="text-xs text-slate-500">Conceptos visuales de estadística</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        <a href="https://www.r-project.org/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 text-sm font-bold">3</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-green-400 transition-colors">CRAN - R Project</div>
+                                <div class="text-xs text-slate-500">Descarga oficial de R</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                        <a href="https://rstudio.com/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">4</div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">RStudio IDE</div>
+                                <div class="text-xs text-slate-500">Entorno de desarrollo para R</div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard de Progreso -->
+    <section id="dashboard" class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-3">Tu <span class="text-uaemex-gold">Progreso</span></h2>
+                <p class="text-slate-400">Seguimiento detallado de tu avance en el programa.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="glass-panel rounded-2xl p-6 text-center">
+                    <div class="relative w-24 h-24 mx-auto mb-4">
+                        <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#1e293b" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#2563EB" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="240" stroke-linecap="round" class="progress-ring-circle" id="pythonRing"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xl font-bold text-blue-400" id="pythonScore">15%</span>
+                        </div>
+                    </div>
+                    <h3 class="font-bold mb-1">Python</h3>
+                    <p class="text-xs text-slate-500">Nivel: Principiante</p>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6 text-center">
+                    <div class="relative w-24 h-24 mx-auto mb-4">
+                        <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#1e293b" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#059669" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round" class="progress-ring-circle" id="rRing"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xl font-bold text-green-400" id="rScore">0%</span>
+                        </div>
+                    </div>
+                    <h3 class="font-bold mb-1">R</h3>
+                    <p class="text-xs text-slate-500">Nivel: Principiante</p>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6 text-center">
+                    <div class="relative w-24 h-24 mx-auto mb-4">
+                        <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#1e293b" stroke-width="8"/>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#C9A227" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="270" stroke-linecap="round" class="progress-ring-circle" id="actuarialRing"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-xl font-bold text-uaemex-gold" id="actuarialScore">5%</span>
+                        </div>
+                    </div>
+                    <h3 class="font-bold mb-1">Actuarial</h3>
+                    <p class="text-xs text-slate-500">Nivel: Introductorio</p>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-6">
+                <h3 class="font-bold mb-4">Actividad de Estudio (Últimos 30 días)</h3>
+                <div class="grid grid-cols-7 gap-2" id="activityHeatmap"></div>
+                <div class="flex items-center gap-4 mt-4 text-xs text-slate-500">
+                    <span>Menos</span>
+                    <div class="flex gap-1">
+                        <div class="w-3 h-3 rounded bg-slate-800"></div>
+                        <div class="w-3 h-3 rounded bg-green-900/50"></div>
+                        <div class="w-3 h-3 rounded bg-green-700/50"></div>
+                        <div class="w-3 h-3 rounded bg-green-500/50"></div>
+                        <div class="w-3 h-3 rounded bg-green-400"></div>
+                    </div>
+                    <span>Más</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-uaemex-blue to-uaemex-gold flex items-center justify-center text-white font-bold">A</div>
+                        <div>
+                            <h3 class="font-bold">Actuaría UAEMex</h3>
+                            <p class="text-xs text-slate-500">Tutor de Programación</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500">Programa de estudio integral para estudiantes de Actuaría de la Universidad Autónoma del Estado de México.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Enlaces Rápidos</h4>
+                    <div class="space-y-2 text-sm">
+                        <a href="#phases" class="block text-slate-400 hover:text-uaemex-gold transition-colors">Plan de Estudios</a>
+                        <a href="#resources" class="block text-slate-400 hover:text-uaemex-gold transition-colors">Recursos</a>
+                        <a href="#dashboard" class="block text-slate-400 hover:text-uaemex-gold transition-colors">Mi Progreso</a>
+                        <a href="http://denms.uaemex.mx/exporientavirtual/" target="_blank" class="block text-slate-400 hover:text-uaemex-gold transition-colors">UAEMex Virtual</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contacto UAEMex</h4>
+                    <div class="space-y-2 text-sm text-slate-500">
+                        <p>Facultad de Economía - Actuaría</p>
+                        <p>Toluca, Estado de México</p>
+                        <p>denms.uaemex.mx</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 mt-8 pt-8 text-center text-sm text-slate-600">
+                <p>Programa de estudio orientativo. Se recomienda la práctica constante con bases de datos reales.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Datos de las fases
+        const phasesData = {
+            1: {
+                title: "Fase 1: Fundamentos de Programación",
+                tutorMessage: "¡Excelente elección! Vamos a construir bases sólidas. Python es perfecto para actuaría por su legibilidad. Empecemos con variables y estructuras de control.",
+                topics: [
+                    { name: "Variables y Tipos de Datos", content: "Las variables son contenedores para almacenar datos. En actuaría, usamos números (edades, primas), texto (nombres de asegurados) y booleanos (estado de póliza)." },
+                    { name: "Estructuras de Control (if/else)", content: "Las decisiones actuariales requieren lógica condicional: ¿El asegurado califica? ¿La prima es adecuada? if/else nos permite automatizar estas decisiones." },
+                    { name: "Bucles (for/while)", content: "Los bucles son esenciales para procesar portfolios completos de pólizas, calcular reservas iterativamente o simular escenarios múltiples." },
+                    { name: "Funciones", content: "Las funciones encapsulan lógica reutilizable: calcular una prima, evaluar un riesgo, proyectar una reserva. Modularidad = mantenibilidad." }
+                ],
+                exercises: [
+                    {
+                        title: "Calculadora de Prima Básica",
+                        difficulty: 1,
+                        description: "Crea una función que calcule la prima de un seguro de vida basada en edad y suma asegurada.",
+                        code: `def calcular_prima(edad, suma_asegurada, tasa_base=0.02):
+    # Ajuste por edad: mayor riesgo = mayor prima
+    factor_edad = 1 + (edad - 25) * 0.01
+    prima = suma_asegurada * tasa_base * factor_edad
+    return prima
+
+# Prueba
+print(calcular_prima(30, 1000000))  # Output: ~22000`
+                    },
+                    {
+                        title: "Clasificación de Riesgo",
+                        difficulty: 1,
+                        description: "Usa if/else para clasificar asegurados en categorías de riesgo según IMC y hábitos.",
+                        code: `def clasificar_riesgo(imc, fumador):
+    if imc < 18.5 or imc > 30:
+        categoria = "Alto"
+    elif fumador:
+        categoria = "Alto"
+    elif imc > 25:
+        categoria = "Medio"
+    else:
+        categoria = "Bajo"
+    return categoria
+
+print(clasificar_riesgo(27, False))  # Medio`
+                    },
+                    {
+                        title: "Proyección de Reservas",
+                        difficulty: 2,
+                        description: "Usa un bucle for para proyectar reservas de siniestros por 5 años con tasa de crecimiento del 5%.",
+                        code: `def proyectar_reservas(reserva_inicial, años, tasa=0.05):
+    reservas = []
+    reserva_actual = reserva_inicial
+    for año in range(1, años + 1):
+        reserva_actual *= (1 + tasa)
+        reservas.append({
+            'año': año,
+            'reserva': round(reserva_actual, 2)
+        })
+    return reservas
+
+proyeccion = proyectar_reservas(100000, 5)
+for r in proyeccion:
+    print(f"Año {r['año']}: ${r['reserva']}")`
+                    }
+                ],
+                quiz: [
+                    {
+                        question: "¿Cuál es la ventaja principal de Python para actuarios principiantes?",
+                        options: [
+                            "Es el lenguaje más rápido computacionalmente",
+                            "Su legibilidad facilita el aprendizaje y mantenimiento de código",
+                            "Es el único que soporta Machine Learning",
+                            "No requiere instalación de librerías"
+                        ],
+                        correct: 1,
+                        explanation: "Python destaca por su sintaxis clara y legible, lo que permite a los actuarios enfocarse en la lógica actuarial en lugar de la complejidad del código."
+                    },
+                    {
+                        question: "¿Qué estructura usarías para procesar 10,000 pólizas de un portfolio?",
+                        options: [
+                            "Solo if/else",
+                            "Un bucle for o while",
+                            "Solo funciones sin bucles",
+                            "Variables individuales para cada póliza"
+                        ],
+                        correct: 1,
+                        explanation: "Los bucles (for/while) son la herramienta correcta para iterar sobre colecciones grandes de datos, como portfolios de pólizas."
+                    },
+                    {
+                        question: "¿Por qué son importantes las funciones en programación actuarial?",
+                        options: [
+                            "Solo para organizar el código visualmente",
+                            "Para encapsular lógica reutilizable como cálculo de primas o reservas",
+                            "Para hacer el código más lento pero más legible",
+                            "No son importantes en actuaría"
+                        ],
+                        correct: 1,
+                        explanation: "Las funciones permiten reutilizar lógica compleja (cálculo de primas, reservas, ratios) en múltiples contextos, reduciendo errores y facilitando el mantenimiento."
+                    }
+                ]
+            },
+            2: {
+                title: "Fase 2: Datos y Visualización",
+                tutorMessage: "¡Ahora vamos a dominar los datos! Pandas y NumPy son tus herramientas esenciales para manipular bases actuariales. El Tidyverse en R es igualmente poderoso.",
+                topics: [
+                    { name: "Pandas - Estructuras de Datos", content: "DataFrames son tablas de datos donde cada fila es una póliza y cada columna un atributo (edad, prima, siniestralidad). Series son columnas individuales." },
+                    { name: "NumPy - Computación Numérica", content: "NumPy proporciona arrays multidimensionales y operaciones vectorizadas. Esencial para cálculos matriciales en reservas y optimización de portfolios." },
+                    { name: "Tidyverse (R)", content: "dplyr para manipulación, ggplot2 para visualización. El pipe operator (%>%) permite encadenar operaciones de forma legible." },
+                    { name: "Limpieza de Datos Actuariales", content: "Datos reales tienen valores faltantes, outliers, formatos inconsistentes. La limpieza es el 80% del trabajo de un data scientist actuarial." }
+                ],
+                exercises: [
+                    {
+                        title: "Análisis de Portfolio con Pandas",
+                        difficulty: 1,
+                        description: "Carga un DataFrame de pólizas y calcula estadísticas descriptivas básicas.",
+                        code: `import pandas as pd
+import numpy as np
+
+# Crear datos de ejemplo
+datos = {
+    'poliza_id': range(1, 101),
+    'edad': np.random.randint(18, 65, 100),
+    'prima': np.random.normal(15000, 3000, 100),
+    'siniestros': np.random.poisson(0.1, 100)
+}
+df = pd.DataFrame(datos)
+
+# Estadísticas descriptivas
+print(df.describe())
+print(f"
+Prima promedio: ${df['prima'].mean():.2f}")
+print(f"Tasa de siniestralidad: {df['siniestros'].mean():.3f}")`
+                    },
+                    {
+                        title: "Limpieza de Datos - Outliers",
+                        difficulty: 2,
+                        description: "Identifica y maneja outliers en primas usando el método IQR.",
+                        code: `def limpiar_outliers(df, columna):
+    Q1 = df[columna].quantile(0.25)
+    Q3 = df[columna].quantile(0.75)
+    IQR = Q3 - Q1
+    limite_bajo = Q1 - 1.5 * IQR
+    limite_alto = Q3 + 1.5 * IQR
+
+    outliers = df[(df[columna] < limite_bajo) | (df[columna] > limite_alto)]
+    df_limpio = df[(df[columna] >= limite_bajo) & (df[columna] <= limite_alto)]
+
+    print(f"Outliers encontrados: {len(outliers)}")
+    return df_limpio
+
+df_limpio = limpiar_outliers(df, 'prima')`
+                    },
+                    {
+                        title: "Visualización de Siniestralidad",
+                        difficulty: 2,
+                        description: "Crea un histograma de siniestros y un scatter plot de edad vs prima.",
+                        code: `import matplotlib.pyplot as plt
+import seaborn as sns
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# Histograma de siniestros
+axes[0].hist(df['siniestros'], bins=10, color='steelblue', edgecolor='black')
+axes[0].set_title('Distribución de Siniestros')
+axes[0].set_xlabel('Número de Siniestros')
+axes[0].set_ylabel('Frecuencia')
+
+# Scatter plot
+axes[1].scatter(df['edad'], df['prima'], alpha=0.6, c=df['siniestros'], cmap='Reds')
+axes[1].set_title('Edad vs Prima')
+axes[1].set_xlabel('Edad')
+axes[1].set_ylabel('Prima')
+
+plt.tight_layout()
+plt.show()`
+                    }
+                ],
+                quiz: [
+                    {
+                        question: "¿Qué estructura de Pandas es equivalente a una tabla SQL?",
+                        options: [
+                            "Series",
+                            "DataFrame",
+                            "Array de NumPy",
+                            "Dictionary"
+                        ],
+                        correct: 1,
+                        explanation: "DataFrame es la estructura tabular de Pandas, equivalente a una tabla SQL o una hoja de Excel, ideal para bases de datos actuariales."
+                    },
+                    {
+                        question: "¿Cuál es la ventaja de usar operaciones vectorizadas de NumPy sobre bucles de Python?",
+                        options: [
+                            "Son más fáciles de leer",
+                            "Son significativamente más rápidas (10-100x)",
+                            "Usan menos memoria siempre",
+                            "No tienen ventajas"
+                        ],
+                        correct: 1,
+                        explanation: "NumPy opera en C a nivel de array completo, evitando el overhead de Python. Para portfolios grandes de pólizas, esto es crítico."
+                    },
+                    {
+                        question: "¿Qué función de dplyr (R) equivale a filter() de Pandas?",
+                        options: [
+                            "select()",
+                            "filter()",
+                            "mutate()",
+                            "summarise()"
+                        ],
+                        correct: 1,
+                        explanation: "filter() en dplyr y Pandas filtran filas basadas en condiciones. select() filtra columnas, mutate() crea nuevas columnas, summarise() agrega."
+                    }
+                ]
+            },
+            3: {
+                title: "Fase 3: Estadística Computacional",
+                tutorMessage: "¡Llegamos a lo bueno! Simulación Monte Carlo, distribuciones de probabilidad y modelado de siniestralidad. Aquí conectamos la teoría estadística con la práctica computacional.",
+                topics: [
+                    { name: "Distribuciones de Probabilidad", content: "Poisson (frecuencia de siniestros), Gamma/Lognormal (severidad), Binomial Negativa (sobredispersión), Pareto (colas pesadas en reaseguro)." },
+                    { name: "Simulación Monte Carlo", content: "Generamos miles de escenarios aleatorios para estimar distribuciones de resultados. Esencial para capital requerido, pricing y reservas." },
+                    { name: "Teoría del Riesgo", content: "Proceso de Poisson Compuesto, probabilidad de ruina, ajuste de colectivos. Simulamos la dinámica de un portfolio a través del tiempo." },
+                    { name: "Bootstrap y Resampling", content: "Técnicas no paramétricas para estimar incertidumbre cuando las distribuciones teóricas no se ajustan bien a los datos históricos." }
+                ],
+                exercises: [
+                    {
+                        title: "Simulación de Frecuencia-Severidad",
+                        difficulty: 2,
+                        description: "Simula 10,000 años de siniestralidad usando Poisson-Gamma.",
+                        code: `import numpy as np
+
+np.random.seed(42)
+
+# Parámetros
+lambda_freq = 50  # Promedio de siniestros/año
+alpha_sev = 2   # Shape Gamma
+beta_sev = 1000 # Scale Gamma
+n_simulaciones = 10000
+
+resultados = []
+for _ in range(n_simulaciones):
+    n_siniestros = np.random.poisson(lambda_freq)
+    if n_siniestros > 0:
+        severidades = np.random.gamma(alpha_sev, beta_sev, n_siniestros)
+        total = severidades.sum()
+    else:
+        total = 0
+    resultados.append(total)
+
+resultados = np.array(resultados)
+print(f"Pérdida esperada: ${resultados.mean():,.0f}")
+print(f"VaR 95%: ${np.percentile(resultados, 95):,.0f}")
+print(f"TVaR 95%: ${resultados[resultados >= np.percentile(resultados, 95)].mean():,.0f}")`
+                    },
+                    {
+                        title: "Ajuste de Distribución",
+                        difficulty: 3,
+                        description: "Ajusta una distribución lognormal a datos históricos de siniestros.",
+                        code: `from scipy import stats
+import numpy as np
+
+# Datos históricos de siniestros (simulados)
+ datos = np.random.lognormal(8, 1.5, 500)
+
+# Ajuste de lognormal
+shape, loc, scale = stats.lognorm.fit(datos, floc=0)
+mu = np.log(scale)
+sigma = shape
+
+print(f"Parámetros estimados:")
+print(f"mu (log-media): {mu:.3f}")
+print(f"sigma (log-desv): {sigma:.3f}")
+
+# Prueba Kolmogorov-Smirnov
+ks_stat, p_value = stats.kstest(datos, 'lognorm', args=(shape, loc, scale))
+print(f"
+KS test p-value: {p_value:.4f}")
+if p_value > 0.05:
+    print("No se rechaza H0: datos siguen lognormal")`
+                    },
+                    {
+                        title: "Probabilidad de Ruina",
+                        difficulty: 3,
+                        description: "Simula la probabilidad de ruina usando el modelo Cramér-Lundberg.",
+                        code: `def simular_ruina(capital_inicial, prima_anual, lambda_s, mu_s, sigma_s, años=100, n_sim=1000):
+    ruin_count = 0
+    for _ in range(n_sim):
+        capital = capital_inicial
+        for año in range(años):
+            # Ingresos
+            capital += prima_anual
+            # Siniestros (Poisson compuesto)
+            n_siniestros = np.random.poisson(lambda_s)
+            if n_siniestros > 0:
+                siniestros = np.random.lognormal(mu_s, sigma_s, n_siniestros)
+                capital -= siniestros.sum()
+            if capital < 0:
+                ruin_count += 1
+                break
+    return ruin_count / n_sim
+
+prob_ruina = simular_ruina(1000000, 500000, 100, 8, 1.2)
+print(f"Probabilidad de ruina: {prob_ruina:.3f}")`
+                    }
+                ],
+                quiz: [
+                    {
+                        question: "¿Qué distribución modela típicamente la frecuencia de siniestros en un portfolio?",
+                        options: [
+                            "Normal",
+                            "Poisson",
+                            "Uniforme",
+                            "Beta"
+                        ],
+                        correct: 1,
+                        explanation: "Poisson es el modelo estándar para conteos de eventos raros (siniestros) en un intervalo de tiempo fijo, con media igual a la varianza."
+                    },
+                    {
+                        question: "¿Qué es el Value at Risk (VaR) en el contexto de simulación?",
+                        options: [
+                            "La pérdida máxima posible",
+                            "El percentil de la distribución de pérdidas (ej. percentil 95)",
+                            "La prima mínima requerida",
+                            "El capital social de la aseguradora"
+                        ],
+                        correct: 1,
+                        explanation: "VaR al nivel α es el percentil (1-α) de la distribución de pérdidas. VaR 95% significa que hay 5% de probabilidad de pérdidas mayores a ese valor."
+                    },
+                    {
+                        question: "¿Cuándo usar Bootstrap en lugar de métodos paramétricos?",
+                        options: [
+                            "Cuando los datos son normales",
+                            "Cuando no conocemos la distribución subyacente o no se ajusta bien",
+                            "Cuando tenemos pocos datos",
+                            "Nunca, siempre es mejor paramétrico"
+                        ],
+                        correct: 1,
+                        explanation: "Bootstrap es no paramétrico: re-muestrea los datos observados. Es útil cuando las distribuciones teóricas no capturan bien la complejidad de los datos actuariales."
+                    }
+                ]
+            },
+            4: {
+                title: "Fase 4: Aplicaciones Actuariales",
+                tutorMessage: "¡Aplicación directa! Vamos a usar R con lifecontingencies para matemáticas actuariales de vida, ChainLadder para reservas IBNR, y GLM para pricing.",
+                topics: [
+                    { name: "Matemáticas Actuariales de Vida (R)", content: "lifecontingencies: tablas de mortalidad, anualidades, seguros de vida, primas netas y cargadas. Conexión directa con Cálculo Actuarial I-III de la UAEMex." },
+                    { name: "Reservas IBNR (R)", content: "ChainLadder: métodos Chain Ladder, Bornhuetter-Ferguson, Mack. Estimación de reservas para siniestros ocurridos pero no reportados." },
+                    { name: "Pricing con GLM", content: "Modelos Lineales Generalizados: Poisson para frecuencia, Gamma para severidad. Modelado de tarifas basado en características del asegurado." },
+                    { name: "Procesos Estocásticos", content: "Cadenas de Markov para modelos de estados múltiples (discapacidad, crítico), procesos de Poisson compuestos para agregación de riesgos." }
+                ],
+                exercises: [
+                    {
+                        title: "Cálculo de Anualidad con lifecontingencies",
+                        difficulty: 2,
+                        description: "Calcula el valor presente de una anualidad vitalicia usando tablas de mortalidad.",
+                        code: `# R code
+library(lifecontingencies)
+
+# Cargar tabla de mortalidad
+data(soa08Act)
+
+# Anualidad vitalicia inmediata para edad 65
+ax <- axn(soa08Act, x=65, i=0.05, m=1)
+print(paste("Valor presente anualidad:", round(ax, 4)))
+
+# Seguro de vida entera
+Ax <- Axn(soa08Act, x=30, i=0.04)
+print(paste("Prima neta seguro vida:", round(Ax, 6)))
+
+# Tabla de conmutación
+lx <- soa08Act@lx
+Dx <- lx * (1.05)^(-soa08Act@x)
+print(head(Dx))`
+                    },
+                    {
+                        title: "Chain Ladder en R",
+                        difficulty: 3,
+                        description: "Aplica el método Chain Ladder para estimar reservas IBNR.",
+                        code: `# R code
+library(ChainLadder)
+
+# Datos de triángulo de desarrollo (ejemplo)
+ triangulo <- matrix(c(
+  1000, 1200, 1350, 1400,
+  1100, 1300, 1450, NA,
+  1200, 1400, NA,   NA,
+  1300, NA,   NA,   NA
+), nrow=4, byrow=TRUE)
+
+# Aplicar Chain Ladder
+cl <- ChainLadder(triangulo)
+print(summary(cl))
+
+# Reservas IBNR
+ibnr <- cl$IBNR
+print(paste("Reservas IBNR totales:", sum(ibnr, na.rm=TRUE)))
+
+# Método Mack para error de predicción
+mack <- MackChainLadder(triangulo)
+plot(mack)`
+                    },
+                    {
+                        title: "GLM para Pricing",
+                        difficulty: 3,
+                        description: "Ajusta un GLM Poisson para modelar frecuencia de siniestros.",
+                        code: `# R code
+library(glm2)
+
+# Datos de ejemplo
+datos <- data.frame(
+  edad = c(25, 35, 45, 55, 65, 30, 40, 50, 60, 28),
+  genero = c("M", "F", "M", "F", "M", "F", "M", "F", "M", "F"),
+  expuesto = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+  siniestros = c(0, 1, 2, 1, 3, 0, 1, 2, 2, 0)
+)
+
+# GLM Poisson con offset log(exposición)
+modelo <- glm(siniestros ~ edad + genero + offset(log(expuesto)),
+              family = poisson(link = "log"),
+              data = datos)
+
+summary(modelo)
+
+# Predicción para nuevo asegurado
+nuevo <- data.frame(edad = 40, genero = "M", expuesto = 1)
+pred <- predict(modelo, nuevo, type = "response")
+print(paste("Frecuencia esperada:", round(pred, 4)))`
+                    }
+                ],
+                quiz: [
+                    {
+                        question: "¿Qué método usa ChainLadder para proyectar pagos futuros?",
+                        options: [
+                            "Regresión lineal simple",
+                            "Factores de desarrollo basados en datos históricos",
+                            "Simulación Monte Carlo exclusivamente",
+                            "Redes neuronales"
+                        ],
+                        correct: 1,
+                        explanation: "Chain Ladder calcula factores de desarrollo (ratios de pagos acumulados entre años sucesivos) y los aplica para proyectar pagos futuros en el triángulo."
+                    },
+                    {
+                        question: "¿Por qué usar GLM en lugar de regresión lineal para pricing?",
+                        options: [
+                            "Es más fácil de interpretar",
+                            "Permite modelar distribuciones no normales (Poisson, Gamma, Binomial)",
+                            "Requiere menos datos",
+                            "Es más rápido computacionalmente"
+                        ],
+                        correct: 1,
+                        explanation: "GLM generaliza la regresión lineal permitiendo distribuciones de la familia exponencial. Para conteos de siniestros usamos Poisson, para severidades Gamma."
+                    },
+                    {
+                        question: "¿Qué representa la prima neta en matemáticas actuariales de vida?",
+                        options: [
+                            "La prima que paga el asegurado",
+                            "El valor presente esperado de los beneficios",
+                            "La prima más comisiones",
+                            "El capital de la aseguradora"
+                        ],
+                        correct: 1,
+                        explanation: "La prima neta es el valor presente actuarial de los beneficios prometidos, calculado usando tablas de mortalidad y tasas de interés. No incluye cargos ni gastos."
+                    }
+                ]
+            },
+            5: {
+                title: "Fase 5: Machine Learning",
+                tutorMessage: "¡El futuro de la actuaría! Machine Learning para predicción de comportamiento del cliente (Churn), análisis de riesgos y modelos avanzados. Conectamos con Modelos Actuariales de la UAEMex.",
+                topics: [
+                    { name: "Predicción de Churn", content: "Modelos de clasificación para identificar asegurados propensos a cancelar. Random Forest, XGBoost, redes neuronales. Métricas: AUC, precision, recall." },
+                    { name: "Análisis de Riesgos", content: "Clustering para segmentación de portfolios, detección de anomalías (fraude), modelos de scoring crediticio adaptados a seguros." },
+                    { name: "Series de Tiempo", content: "ARIMA, GARCH para modelar volatilidad de reservas, predicción de siniestralidad temporal. Prophet para estacionalidad." },
+                    { name: "Deep Learning", content: "Redes neuronales para predicción de severidad, embeddings para variables categóricas (códigos postales, ocupaciones), autoencoders para detección de anomalías." }
+                ],
+                exercises: [
+                    {
+                        title: "Predicción de Churn con Random Forest",
+                        difficulty: 3,
+                        description: "Entrena un modelo para predecir cancelación de pólizas.",
+                        code: `from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, roc_auc_score
+import pandas as pd
+import numpy as np
+
+# Datos de ejemplo
+np.random.seed(42)
+df = pd.DataFrame({
+    'edad': np.random.randint(18, 80, 1000),
+    'antiguedad': np.random.randint(0, 20, 1000),
+    'prima': np.random.normal(15000, 5000, 1000),
+    'siniestros_ultimo_año': np.random.poisson(1, 1000),
+    'reclamos': np.random.poisson(0.5, 1000),
+    'churn': np.random.binomial(1, 0.15, 1000)  # 15% churn rate
+})
+
+X = df.drop('churn', axis=1)
+y = df['churn']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Entrenar Random Forest
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+
+# Predicciones
+y_pred = rf.predict(X_test)
+y_prob = rf.predict_proba(X_test)[:, 1]
+
+print(classification_report(y_test, y_pred))
+print(f"AUC-ROC: {roc_auc_score(y_test, y_prob):.3f}")
+
+# Importancia de variables
+importancia = pd.DataFrame({
+    'variable': X.columns,
+    'importancia': rf.feature_importances_
+}).sort_values('importancia', ascending=False)
+print(importancia)`
+                    },
+                    {
+                        title: "Clustering de Asegurados",
+                        difficulty: 2,
+                        description: "Usa K-Means para segmentar el portfolio en grupos de riesgo.",
+                        code: `from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+
+# Seleccionar variables para clustering
+features = ['edad', 'prima', 'siniestros_ultimo_año', 'antiguedad']
+X_cluster = df[features]
+
+# Estandarizar
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_cluster)
+
+# K-Means con 4 clusters
+kmeans = KMeans(n_clusters=4, random_state=42)
+df['cluster'] = kmeans.fit_predict(X_scaled)
+
+# Análisis de clusters
+print(df.groupby('cluster')[features].mean())
+
+# Visualización
+plt.scatter(df['edad'], df['prima'], c=df['cluster'], cmap='viridis', alpha=0.6)
+plt.xlabel('Edad')
+plt.ylabel('Prima')
+plt.title('Segmentación de Asegurados')
+plt.colorbar(label='Cluster')
+plt.show()`
+                    },
+                    {
+                        title: "Predicción de Severidad con XGBoost",
+                        difficulty: 4,
+                        description: "Modela la severidad de siniestros usando XGBoost con variables de póliza.",
+                        code: `import xgboost as xgb
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+# Solo siniestros con reclamo > 0
+siniestros_df = df[df['reclamos'] > 0].copy()
+siniestros_df['severidad'] = np.random.lognormal(8, 1.2, len(siniestros_df))
+
+X_sev = siniestros_df[['edad', 'antiguedad', 'prima', 'siniestros_ultimo_año']]
+y_sev = siniestros_df['severidad']
+
+X_train_s, X_test_s, y_train_s, y_test_s = train_test_split(X_sev, y_sev, test_size=0.2, random_state=42)
+
+# XGBoost
+modelo_xgb = xgb.XGBRegressor(
+    n_estimators=100,
+    max_depth=4,
+    learning_rate=0.1,
+    random_state=42
+)
+modelo_xgb.fit(X_train_s, y_train_s)
+
+y_pred_s = modelo_xgb.predict(X_test_s)
+
+print(f"MAE: ${mean_absolute_error(y_test_s, y_pred_s):,.0f}")
+print(f"RMSE: ${np.sqrt(mean_squared_error(y_test_s, y_pred_s)):,.0f}")
+
+# SHAP values para interpretabilidad
+import shap
+explainer = shap.TreeExplainer(modelo_xgb)
+shap_values = explainer.shap_values(X_test_s)
+shap.summary_plot(shap_values, X_test_s)`
+                    }
+                ],
+                quiz: [
+                    {
+                        question: "¿Qué métrica es más apropiada para evaluar un modelo de Churn desbalanceado?",
+                        options: [
+                            "Accuracy",
+                            "AUC-ROC o F1-Score",
+                            "R²",
+                            "MAE"
+                        ],
+                        correct: 1,
+                        explanation: "En datasets desbalanceados (15% churn vs 85% retención), accuracy puede ser engañosa. AUC-ROC evalúa discriminación y F1 balancea precision y recall."
+                    },
+                    {
+                        question: "¿Qué ventaja tiene XGBoost sobre Random Forest?",
+                        options: [
+                            "Siempre es más rápido de entrenar",
+                            "Usa boosting secuencial para corregir errores de modelos previos",
+                            "No requiere ajuste de hiperparámetros",
+                            "Solo funciona con datos numéricos"
+                        ],
+                        correct: 1,
+                        explanation: "XGBoost usa gradient boosting: entrena árboles secuencialmente donde cada nuevo árbol corrige los errores del ensemble previo. Esto típicamente produce mejor performance."
+                    },
+                    {
+                        question: "¿Para qué se usan los SHAP values en actuaría?",
+                        options: [
+                            "Para acelerar el entrenamiento",
+                            "Para explicar por qué un modelo predice cierto valor para cada póliza",
+                            "Para reducir el número de variables",
+                            "Para convertir datos categóricos a numéricos"
+                        ],
+                        correct: 1,
+                        explanation: "SHAP values descomponen cada predicción en contribuciones de cada variable. En actuaría esto es crítico para explicabilidad regulatoria y ajuste de tarifas individualizadas."
+                    }
+                ]
+            }
+        };
+
+        // Estado de la aplicación
+        let currentPhase = null;
+        let currentTopic = 0;
+        let quizAnswers = {};
+        let completedExercises = new Set();
+
+        // Funciones de navegación
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showSubjectInfo(title, desc) {
+            const info = document.getElementById('subjectInfo');
+            document.getElementById('subjectTitle').textContent = title;
+            document.getElementById('subjectDesc').textContent = desc;
+            info.classList.remove('hidden');
+            info.classList.add('fade-in');
+        }
+
+        function selectPhase(phaseNum) {
+            currentPhase = phaseNum;
+            currentTopic = 0;
+            quizAnswers = {};
+
+            const data = phasesData[phaseNum];
+
+            document.getElementById('phases').classList.add('hidden');
+            document.getElementById('phaseContent').classList.remove('hidden');
+            document.getElementById('phaseTitle').textContent = data.title;
+            document.getElementById('tutorPhaseMessage').textContent = data.tutorMessage;
+
+            // Render sidebar
+            const sidebar = document.getElementById('topicSidebar');
+            sidebar.innerHTML = data.topics.map((topic, i) => `
+                <div class="sidebar-item p-3 rounded-lg cursor-pointer ${i === 0 ? 'active' : ''}" onclick="selectTopic(${i})">
+                    <div class="text-sm font-medium ${i === 0 ? 'text-blue-400' : 'text-slate-300'}">${topic.name}</div>
+                </div>
+            `).join('');
+
+            renderTopic(0);
+            renderExercises();
+            renderQuiz();
+
+            document.getElementById('phaseContent').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closePhase() {
+            document.getElementById('phaseContent').classList.add('hidden');
+            document.getElementById('phases').classList.remove('hidden');
+            document.getElementById('phases').scrollIntoView({ behavior: 'smooth' });
+            currentPhase = null;
+        }
+
+        function selectTopic(index) {
+            currentTopic = index;
+
+            // Update sidebar
+            document.querySelectorAll('.sidebar-item').forEach((el, i) => {
+                if (i === index) {
+                    el.classList.add('active');
+                    el.querySelector('.text-sm').classList.add('text-blue-400');
+                    el.querySelector('.text-sm').classList.remove('text-slate-300');
+                } else {
+                    el.classList.remove('active');
+                    el.querySelector('.text-sm').classList.remove('text-blue-400');
+                    el.querySelector('.text-sm').classList.add('text-slate-300');
+                }
+            });
+
+            renderTopic(index);
+        }
+
+        function renderTopic(index) {
+            const data = phasesData[currentPhase];
+            const topic = data.topics[index];
+
+            document.getElementById('theoryContent').innerHTML = `
+                <h3 class="text-xl font-bold mb-4">${topic.name}</h3>
+                <p class="text-slate-300 leading-relaxed mb-6">${topic.content}</p>
+                <div class="flex items-center gap-2 text-sm text-slate-500">
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    <span>Tema ${index + 1} de ${data.topics.length}</span>
+                </div>
+            `;
+        }
+
+        function renderExercises() {
+            const data = phasesData[currentPhase];
+            const container = document.getElementById('exercisesList');
+
+            container.innerHTML = data.exercises.map((ex, i) => `
+                <div class="exercise-card glass-panel rounded-xl p-4 border border-slate-700">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <h4 class="font-bold mb-1">${ex.title}</h4>
+                            <p class="text-sm text-slate-400">${ex.description}</p>
+                        </div>
+                        <div class="flex gap-1">
+                            ${Array(ex.difficulty).fill('<span class="w-2 h-2 rounded-full bg-yellow-500"></span>').join('')}
+                            ${Array(3 - ex.difficulty).fill('<span class="w-2 h-2 rounded-full bg-slate-600"></span>').join('')}
+                        </div>
+                    </div>
+                    <div class="code-block mb-3">
+                        <div class="code-header">
+                            <div class="code-dot dot-red"></div>
+                            <div class="code-dot dot-yellow"></div>
+                            <div class="code-dot dot-green"></div>
+                            <span class="text-xs text-slate-400 ml-2">${currentPhase <= 2 ? 'Python' : 'R / Python'}</span>
+                        </div>
+                        <pre class="p-4 text-sm overflow-x-auto"><code class="language-${currentPhase <= 2 ? 'python' : (ex.code.includes('library(') ? 'r' : 'python')}">${escapeHtml(ex.code)}</code></pre>
+                    </div>
+                    <button onclick="markExerciseComplete(${i})" class="px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors ${completedExercises.has(`${currentPhase}-${i}`) ? 'bg-green-500/20 text-green-400' : ''}">
+                        ${completedExercises.has(`${currentPhase}-${i}`) ? '✓ Completado' : 'Marcar como completado'}
+                    </button>
+                </div>
+            `).join('');
+
+            hljs.highlightAll();
+        }
+
+        function renderQuiz() {
+            const data = phasesData[currentPhase];
+            const container = document.getElementById('quizContainer');
+
+            container.innerHTML = data.quiz.map((q, i) => `
+                <div class="space-y-4">
+                    <p class="font-medium">${i + 1}. ${q.question}</p>
+                    <div class="space-y-2">
+                        ${q.options.map((opt, j) => `
+                            <div class="quiz-option p-3 rounded-lg border border-slate-700 ${quizAnswers[`${currentPhase}-${i}`] === j ? (j === q.correct ? 'correct' : 'incorrect') : ''}" 
+                                 onclick="selectAnswer(${i}, ${j})">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 rounded-full border-2 border-slate-600 flex items-center justify-center text-xs font-bold">
+                                        ${String.fromCharCode(65 + j)}
+                                    </div>
+                                    <span class="text-sm">${opt}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${quizAnswers[`${currentPhase}-${i}`] !== undefined ? `
+                        <div class="p-3 rounded-lg ${quizAnswers[`${currentPhase}-${i}`] === q.correct ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}">
+                            <p class="text-sm ${quizAnswers[`${currentPhase}-${i}`] === q.correct ? 'text-green-400' : 'text-red-400'}">
+                                ${quizAnswers[`${currentPhase}-${i}`] === q.correct ? '✓ Correcto!' : '✗ Incorrecto'}
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">${q.explanation}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function selectAnswer(questionIndex, optionIndex) {
+            if (quizAnswers[`${currentPhase}-${questionIndex}`] !== undefined) return;
+
+            quizAnswers[`${currentPhase}-${questionIndex}`] = optionIndex;
+            renderQuiz();
+
+            // Check if all answered
+            const data = phasesData[currentPhase];
+            const allAnswered = data.quiz.every((_, i) => quizAnswers[`${currentPhase}-${i}`] !== undefined);
+            if (allAnswered) {
+                const correct = data.quiz.filter((q, i) => quizAnswers[`${currentPhase}-${i}`] === q.correct).length;
+                if (correct === data.quiz.length) {
+                    createConfetti();
+                }
+            }
+        }
+
+        function markExerciseComplete(exIndex) {
+            completedExercises.add(`${currentPhase}-${exIndex}`);
+            renderExercises();
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalExercises = Object.values(phasesData).reduce((sum, p) => sum + p.exercises.length, 0);
+            const completed = completedExercises.size;
+            const progress = Math.round((completed / totalExercises) * 100);
+
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('overallProgress').textContent = `${progress}%`;
+        }
+
+        function createConfetti() {
+            const colors = ['#C9A227', '#2563EB', '#059669', '#DC2626', '#7C3AED'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Generar heatmap de actividad
+        function generateHeatmap() {
+            const container = document.getElementById('activityHeatmap');
+            const days = 30;
+            let html = '';
+            for (let i = 0; i < days; i++) {
+                const intensity = Math.random();
+                let color;
+                if (intensity < 0.3) color = 'bg-slate-800';
+                else if (intensity < 0.5) color = 'bg-green-900/50';
+                else if (intensity < 0.7) color = 'bg-green-700/50';
+                else if (intensity < 0.9) color = 'bg-green-500/50';
+                else color = 'bg-green-400';
+
+                html += `<div class="heatmap-cell w-8 h-8 rounded ${color} cursor-pointer" title="Día ${i + 1}: ${Math.round(intensity * 100)}% actividad"></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // Scroll indicator
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            document.getElementById('scrollIndicator').style.width = `${progress}%`;
+        });
+
+        // Tutor messages rotation
+        const tutorMessages = [
+            "Hola! Soy tu tutor personal. Estoy aquí para guiarte...",
+            "Recuerda: la práctica constante es clave en actuaría...",
+            "¿Sabías que Python es el lenguaje más usado en data science?",
+            "Cada ejercicio te acerca más a dominar la programación actuarial...",
+            "¡No te rindas! Los actuarios más exitosos dominan la programación..."
+        ];
+        let messageIndex = 0;
+        setInterval(() => {
+            messageIndex = (messageIndex + 1) % tutorMessages.length;
+            const msg = document.getElementById('tutorMessage');
+            msg.style.opacity = '0';
+            setTimeout(() => {
+                msg.textContent = tutorMessages[messageIndex];
+                msg.style.opacity = '1';
+            }, 300);
+        }, 5000);
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            generateHeatmap();
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+</html>
