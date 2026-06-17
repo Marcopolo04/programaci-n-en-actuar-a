@@ -182,7 +182,10 @@
             z-index: 100;
             transition: width 0.1s ease;
         }
-        .hidden { display: none !important; }
+        /* CRITICAL FIX: Use is-hidden instead of hidden to avoid Tailwind conflict */
+        .is-hidden {
+            display: none !important;
+        }
     </style>
 <base target="_blank">
 </head>
@@ -408,7 +411,7 @@
                 </div>
             </div>
 
-            <div id="subjectInfo" class="mt-4 glass-panel rounded-xl p-4 hidden">
+            <div id="subjectInfo" class="mt-4 glass-panel rounded-xl p-4 is-hidden">
                 <h3 class="font-bold text-uaemex-gold mb-1" id="subjectTitle"></h3>
                 <p class="text-sm text-slate-300" id="subjectDesc"></p>
             </div>
@@ -553,10 +556,10 @@
         </div>
     </section>
 
-    <section id="phaseContent" class="py-16 px-4 hidden">
+    <section id="phaseContent" class="py-16 px-4 is-hidden">
         <div class="max-w-7xl mx-auto">
             <div class="flex items-center gap-4 mb-8">
-                <button onclick="closePhase()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors">
+                <button onclick="closePhase()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </button>
                 <h2 class="text-2xl font-bold" id="phaseTitle">Fase 1: Fundamentos</h2>
@@ -620,7 +623,7 @@
                         <h3 class="text-lg font-bold">Python</h3>
                     </div>
                     <div class="space-y-3">
-                        <a href="https://www.kaggle.com/learn/intro-to-programming" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://www.kaggle.com/learn/intro-to-programming" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">1</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">Intro to Programming - Kaggle Learn</div>
@@ -628,7 +631,7 @@
                             </div>
                             <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
-                        <a href="https://www.kaggle.com/learn/python" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://www.kaggle.com/learn/python" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">2</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">Python Intermedio - Kaggle</div>
@@ -636,7 +639,7 @@
                             </div>
                             <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
-                        <a href="https://www.kaggle.com/learn/pandas" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://www.kaggle.com/learn/pandas" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">3</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">Pandas - Kaggle Learn</div>
@@ -644,7 +647,7 @@
                             </div>
                             <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
-                        <a href="https://www.kaggle.com/learn/data-visualization" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://www.kaggle.com/learn/data-visualization" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">4</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">Data Visualization - Kaggle</div>
@@ -652,7 +655,7 @@
                             </div>
                             <svg class="w-4 h-4 text-slate-600 group-hover:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
-                        <a href="https://cs50.harvard.edu/python/2022/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://cs50.harvard.edu/python/2022/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center text-red-400 text-sm font-bold">&#9733;</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-red-400 transition-colors">Harvard CS50P - Python</div>
@@ -669,7 +672,7 @@
                         <h3 class="text-lg font-bold">R y Estadistica</h3>
                     </div>
                     <div class="space-y-3">
-                        <a href="https://r4ds.had.co.nz/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://r4ds.had.co.nz/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 text-sm font-bold">1</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-green-400 transition-colors">R para Ciencia de Datos</div>
@@ -677,7 +680,7 @@
                             </div>
                             <svg class="w-4 h-4 text-slate-600 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
-                        <a href="https://www.youtube.com/@statquest" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://www.youtube.com/@statquest" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 text-sm font-bold">2</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-green-400 transition-colors">StatQuest con Josh Starmer</div>
@@ -685,7 +688,7 @@
                             </div>
                             <svg class="w-4 h-4 text-slate-600 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
-                        <a href="https://www.r-project.org/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://www.r-project.org/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-400 text-sm font-bold">3</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-green-400 transition-colors">CRAN - R Project</div>
@@ -693,7 +696,7 @@
                             </div>
                             <svg class="w-4 h-4 text-slate-600 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                         </a>
-                        <a href="https://rstudio.com/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group">
+                        <a href="https://rstudio.com/" target="_blank" class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50 hover:bg-slate-800 transition-colors group cursor-pointer">
                             <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400 text-sm font-bold">4</div>
                             <div class="flex-1">
                                 <div class="text-sm font-medium group-hover:text-blue-400 transition-colors">RStudio IDE</div>
@@ -792,10 +795,10 @@
                 <div>
                     <h4 class="font-bold mb-4">Enlaces Rapidos</h4>
                     <div class="space-y-2 text-sm">
-                        <a href="#phases" class="block text-slate-400 hover:text-uaemex-gold transition-colors">Plan de Estudios</a>
-                        <a href="#resources" class="block text-slate-400 hover:text-uaemex-gold transition-colors">Recursos</a>
-                        <a href="#dashboard" class="block text-slate-400 hover:text-uaemex-gold transition-colors">Mi Progreso</a>
-                        <a href="http://denms.uaemex.mx/exporientavirtual/" target="_blank" class="block text-slate-400 hover:text-uaemex-gold transition-colors">UAEMex Virtual</a>
+                        <a href="#phases" class="block text-slate-400 hover:text-uaemex-gold transition-colors cursor-pointer">Plan de Estudios</a>
+                        <a href="#resources" class="block text-slate-400 hover:text-uaemex-gold transition-colors cursor-pointer">Recursos</a>
+                        <a href="#dashboard" class="block text-slate-400 hover:text-uaemex-gold transition-colors cursor-pointer">Mi Progreso</a>
+                        <a href="http://denms.uaemex.mx/exporientavirtual/" target="_blank" class="block text-slate-400 hover:text-uaemex-gold transition-colors cursor-pointer">UAEMex Virtual</a>
                     </div>
                 </div>
                 <div>
@@ -1443,51 +1446,97 @@ shap.summary_plot(shap_values, X_test_s)`
         let completedExercises = new Set();
 
         // ============================================
+        // FUNCIONES DE UTILIDAD - SHOW/HIDE FIX
+        // ============================================
+        function showElement(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.display = '';
+                el.classList.remove('is-hidden');
+            }
+        }
+
+        function hideElement(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.display = 'none';
+            }
+        }
+
+        // ============================================
         // FUNCIONES DE NAVEGACION
         // ============================================
         function scrollToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function showSubjectInfo(title, desc) {
             const info = document.getElementById('subjectInfo');
-            document.getElementById('subjectTitle').textContent = title;
-            document.getElementById('subjectDesc').textContent = desc;
-            info.classList.remove('hidden');
-            info.classList.add('fade-in');
+            const titleEl = document.getElementById('subjectTitle');
+            const descEl = document.getElementById('subjectDesc');
+            if (info && titleEl && descEl) {
+                titleEl.textContent = title;
+                descEl.textContent = desc;
+                info.classList.remove('is-hidden');
+                info.style.display = '';
+                info.classList.add('fade-in');
+            }
         }
 
         function selectPhase(phaseNum) {
+            console.log('selectPhase called with:', phaseNum);
             currentPhase = phaseNum;
             currentTopic = 0;
             quizAnswers = {};
 
             const data = phasesData[phaseNum];
+            if (!data) {
+                console.error('No data found for phase', phaseNum);
+                return;
+            }
 
-            document.getElementById('phases').classList.add('hidden');
-            document.getElementById('phaseContent').classList.remove('hidden');
-            document.getElementById('phaseTitle').textContent = data.title;
-            document.getElementById('tutorPhaseMessage').textContent = data.tutorMessage;
+            // Hide phases section, show phase content
+            hideElement('phases');
+            showElement('phaseContent');
+
+            const titleEl = document.getElementById('phaseTitle');
+            const tutorMsgEl = document.getElementById('tutorPhaseMessage');
+
+            if (titleEl) titleEl.textContent = data.title;
+            if (tutorMsgEl) tutorMsgEl.textContent = data.tutorMessage;
 
             // Render sidebar
             const sidebar = document.getElementById('topicSidebar');
-            sidebar.innerHTML = data.topics.map((topic, i) => 
-                '<div class="sidebar-item p-3 rounded-lg cursor-pointer ' + (i === 0 ? 'active' : '') + '" onclick="selectTopic(' + i + ')">' +
-                '<div class="text-sm font-medium ' + (i === 0 ? 'text-blue-400' : 'text-slate-300') + '">' + topic.name + '</div>' +
-                '</div>'
-            ).join('');
+            if (sidebar) {
+                sidebar.innerHTML = data.topics.map((topic, i) => 
+                    '<div class="sidebar-item p-3 rounded-lg cursor-pointer ' + (i === 0 ? 'active' : '') + '" onclick="selectTopic(' + i + ')">' +
+                    '<div class="text-sm font-medium ' + (i === 0 ? 'text-blue-400' : 'text-slate-300') + '">' + topic.name + '</div>' +
+                    '</div>'
+                ).join('');
+            }
 
             renderTopic(0);
             renderExercises();
             renderQuiz();
 
-            document.getElementById('phaseContent').scrollIntoView({ behavior: 'smooth' });
+            // Scroll to phase content
+            const phaseContent = document.getElementById('phaseContent');
+            if (phaseContent) {
+                phaseContent.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function closePhase() {
-            document.getElementById('phaseContent').classList.add('hidden');
-            document.getElementById('phases').classList.remove('hidden');
-            document.getElementById('phases').scrollIntoView({ behavior: 'smooth' });
+            hideElement('phaseContent');
+            showElement('phases');
+
+            const phases = document.getElementById('phases');
+            if (phases) {
+                phases.scrollIntoView({ behavior: 'smooth' });
+            }
             currentPhase = null;
         }
 
@@ -1496,14 +1545,19 @@ shap.summary_plot(shap_values, X_test_s)`
 
             // Update sidebar
             document.querySelectorAll('.sidebar-item').forEach((el, i) => {
+                const textEl = el.querySelector('.text-sm');
                 if (i === index) {
                     el.classList.add('active');
-                    el.querySelector('.text-sm').classList.add('text-blue-400');
-                    el.querySelector('.text-sm').classList.remove('text-slate-300');
+                    if (textEl) {
+                        textEl.classList.add('text-blue-400');
+                        textEl.classList.remove('text-slate-300');
+                    }
                 } else {
                     el.classList.remove('active');
-                    el.querySelector('.text-sm').classList.remove('text-blue-400');
-                    el.querySelector('.text-sm').classList.add('text-slate-300');
+                    if (textEl) {
+                        textEl.classList.remove('text-blue-400');
+                        textEl.classList.add('text-slate-300');
+                    }
                 }
             });
 
@@ -1511,21 +1565,30 @@ shap.summary_plot(shap_values, X_test_s)`
         }
 
         function renderTopic(index) {
+            if (!currentPhase || !phasesData[currentPhase]) return;
+
             const data = phasesData[currentPhase];
             const topic = data.topics[index];
+            if (!topic) return;
 
-            document.getElementById('theoryContent').innerHTML = 
-                '<h3 class="text-xl font-bold mb-4">' + topic.name + '</h3>' +
-                '<p class="text-slate-300 leading-relaxed mb-6">' + topic.content + '</p>' +
-                '<div class="flex items-center gap-2 text-sm text-slate-500">' +
-                '<span class="w-2 h-2 rounded-full bg-green-500"></span>' +
-                '<span>Tema ' + (index + 1) + ' de ' + data.topics.length + '</span>' +
-                '</div>';
+            const theoryContent = document.getElementById('theoryContent');
+            if (theoryContent) {
+                theoryContent.innerHTML = 
+                    '<h3 class="text-xl font-bold mb-4">' + topic.name + '</h3>' +
+                    '<p class="text-slate-300 leading-relaxed mb-6">' + topic.content + '</p>' +
+                    '<div class="flex items-center gap-2 text-sm text-slate-500">' +
+                    '<span class="w-2 h-2 rounded-full bg-green-500"></span>' +
+                    '<span>Tema ' + (index + 1) + ' de ' + data.topics.length + '</span>' +
+                    '</div>';
+            }
         }
 
         function renderExercises() {
+            if (!currentPhase || !phasesData[currentPhase]) return;
+
             const data = phasesData[currentPhase];
             const container = document.getElementById('exercisesList');
+            if (!container) return;
 
             container.innerHTML = data.exercises.map((ex, i) => {
                 const isCompleted = completedExercises.has(currentPhase + '-' + i);
@@ -1550,7 +1613,7 @@ shap.summary_plot(shap_values, X_test_s)`
                     '</div>' +
                     '<pre class="p-4 text-sm overflow-x-auto"><code class="language-' + lang + '">' + escapeHtml(ex.code) + '</code></pre>' +
                     '</div>' +
-                    '<button onclick="markExerciseComplete(' + i + ')" class="px-4 py-2 ' + (isCompleted ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400') + ' rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors">' +
+                    '<button onclick="markExerciseComplete(' + i + ')" class="px-4 py-2 ' + (isCompleted ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400') + ' rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors cursor-pointer">' +
                     (isCompleted ? '&#10003; Completado' : 'Marcar como completado') +
                     '</button>' +
                     '</div>';
@@ -1562,8 +1625,11 @@ shap.summary_plot(shap_values, X_test_s)`
         }
 
         function renderQuiz() {
+            if (!currentPhase || !phasesData[currentPhase]) return;
+
             const data = phasesData[currentPhase];
             const container = document.getElementById('quizContainer');
+            if (!container) return;
 
             container.innerHTML = data.quiz.map((q, i) => {
                 const answered = quizAnswers[currentPhase + '-' + i];
@@ -1631,13 +1697,19 @@ shap.summary_plot(shap_values, X_test_s)`
             const completed = completedExercises.size;
             const progress = Math.round((completed / totalExercises) * 100);
 
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('overallProgress').textContent = progress + '%';
+            const progressBar = document.getElementById('progressBar');
+            const overallProgress = document.getElementById('overallProgress');
+
+            if (progressBar) progressBar.style.width = progress + '%';
+            if (overallProgress) overallProgress.textContent = progress + '%';
 
             // Update rings
             const circumference = 2 * Math.PI * 45;
-            document.getElementById('pythonRing').setAttribute('stroke-dashoffset', circumference * (1 - progress / 100));
-            document.getElementById('pythonScore').textContent = progress + '%';
+            const pythonRing = document.getElementById('pythonRing');
+            const pythonScore = document.getElementById('pythonScore');
+
+            if (pythonRing) pythonRing.setAttribute('stroke-dashoffset', circumference * (1 - progress / 100));
+            if (pythonScore) pythonScore.textContent = progress + '%';
         }
 
         function createConfetti() {
@@ -1662,6 +1734,8 @@ shap.summary_plot(shap_values, X_test_s)`
         // Generar heatmap de actividad
         function generateHeatmap() {
             const container = document.getElementById('activityHeatmap');
+            if (!container) return;
+
             const days = 30;
             let html = '';
             for (let i = 0; i < days; i++) {
@@ -1680,10 +1754,13 @@ shap.summary_plot(shap_values, X_test_s)`
 
         // Scroll indicator
         window.addEventListener('scroll', () => {
-            const scrollTop = document.documentElement.scrollTop;
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const progress = (scrollTop / scrollHeight) * 100;
-            document.getElementById('scrollIndicator').style.width = progress + '%';
+            const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+            const indicator = document.getElementById('scrollIndicator');
+            if (indicator) {
+                indicator.style.width = progress + '%';
+            }
         });
 
         // Tutor messages rotation
@@ -1709,10 +1786,15 @@ shap.summary_plot(shap_values, X_test_s)`
 
         // Inicializacion
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded - initializing...');
             generateHeatmap();
             if (typeof hljs !== 'undefined') {
                 hljs.highlightAll();
             }
+            // Ensure phaseContent is hidden initially
+            hideElement('phaseContent');
+            showElement('phases');
+            console.log('Initialization complete');
         });
     </script>
 </body>
